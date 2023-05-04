@@ -148,7 +148,7 @@ where
     let target = settings.window.platform_specific.target.clone();
 
     let should_be_visible = settings.window.visible;
-    let builder = settings
+    let  mut builder = settings
         .window
         .into_builder(
             &application.title(),
@@ -157,6 +157,14 @@ where
         )
         .with_visible(false);
 
+    log::error!("Wayland!");
+    #[cfg(target_os = "linux")]
+    {
+        log::debug!("Wayland!");
+        println!("Wayland!");
+        use winit::platform::unix::WindowBuilderExtUnix;
+        builder = builder.with_wayland_csd_theme(winit::window::Theme::Dark);
+    }
     log::debug!("Window builder: {:#?}", builder);
 
     let window = builder
